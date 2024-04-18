@@ -1,33 +1,32 @@
-using TodoList.Controllers;
-using TodoList.Interfaces;
+using TodoList.Extensions;
 using TodoList.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<TodoDBContext>(
-    options => options.UseNpgsql(builder.Configuration.GetConnectionString(builder.Environment.IsProduction() ? "DockerConnection" : "DefaultConnection"), o => o.UseNetTopologySuite())
+    options => options.UseNpgsql(builder.Configuration.GetConnectionString(builder.Environment.IsEnvironment("Docker") ? "DockerConnection" : "DefaultConnection"))
 );
 
 // Add services to the container.
-builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<ITodoRepository, TodoPersistenceAdapter>();
+builder.Services.AddControllers();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddTodoServices();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
+if (app.Environment.IsDevelopment() || app.Environment.IsEnvironment("Docker"))
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
+app.Services.AddMigrations();
 
 app.MapControllers();
 

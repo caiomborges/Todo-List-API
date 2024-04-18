@@ -1,9 +1,6 @@
-using System.ComponentModel.DataAnnotations.Schema;
+namespace TodoList.Data.Dtos;
 
-namespace TodoList.Models;
-
-[Table("Todos")]
-public class Todo
+public record TodoDto
 {
     public Guid Id { get; set; }
     public string Name { get; set; } = string.Empty;

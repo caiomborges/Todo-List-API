@@ -7,7 +7,7 @@ public class TodoDBContext : DbContext
 {
     public TodoDBContext(DbContextOptions<TodoDBContext> options) : base(options) { }
 
-    public DbSet<Todo> Todo { get; set; }
+    public DbSet<Todo> Todos { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -1,4 +1,3 @@
-using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -14,7 +13,7 @@ public class CreateDB : Migration
     protected override void Up(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.CreateTable(
-            name: "TodoLists",
+            name: "Todos",
             columns: table => new
             {
                 Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -26,20 +25,20 @@ public class CreateDB : Migration
             },
             constraints: table =>
             {
-                table.PrimaryKey("PK_TodoLists", x => x.Id);
+                table.PrimaryKey("PK_Todos", x => x.Id);
             });
 
         migrationBuilder.CreateIndex(
-            name: "IX_TodoLists_TodoId",
-            table: "TodoLists",
-            column: "TodoId");
+            name: "IX_Todos_Id",
+            table: "Todos",
+            column: "Id");
     }
 
     /// <inheritdoc />
     protected override void Down(MigrationBuilder migrationBuilder)
     {
         migrationBuilder.DropTable(
-            name: "TodoLists");
+            name: "Todos");
     }
 
     protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,8 +46,6 @@ public class CreateDB : Migration
         modelBuilder
             .HasAnnotation("ProductVersion", "8.0.2")
             .HasAnnotation("Relational:MaxIdentifierLength", 63);
-
-        NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
         modelBuilder.Entity("TodoList.Models.Todo", b =>
         {
@@ -66,12 +63,12 @@ public class CreateDB : Migration
             b.Property<DateTime>("CreatedAt")
                 .HasColumnType("timestamp with time zone");
 
-            b.Property<DateTime>("DueDate")
+            b.Property<DateTime?>("DueDate")
                 .HasColumnType("timestamp with time zone");
 
             b.HasKey("Id");
 
-            b.ToTable("TodoLists");
+            b.ToTable("Todos");
         });
     }
 }
